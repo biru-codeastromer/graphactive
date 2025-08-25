@@ -11,7 +11,7 @@ def gcn_features(An,X,layers=2):
 def fit_predict(Xtr,ytr,Xte,seed=42):
     scaler=StandardScaler(with_mean=False)
     Xtr2=scaler.fit_transform(Xtr)
-    clf=LogisticRegression(max_iter=1000,random_state=seed,multi_class="auto")
+    clf=LogisticRegression(max_iter=1000,random_state=seed)
     clf.fit(Xtr2,ytr)
     Xte2=scaler.transform(Xte)
     proba=clf.predict_proba(Xte2)

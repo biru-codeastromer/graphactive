@@ -8,15 +8,15 @@ from ga.active import run_active
 st.set_page_config(page_title="GraphActive",page_icon="🧭",layout="centered")
 
 seed=st.sidebar.number_input("seed",value=42,step=1)
-n=st.sidebar.number_input("nodes",value=1500,step=100)
-k=st.sidebar.number_input("communities",value=3,step=1)
+n=st.sidebar.number_input("nodes",min_value=100,value=1500,step=100)
+k=st.sidebar.number_input("communities",min_value=2,value=3,step=1)
 p_in=st.sidebar.slider("p_in",min_value=0.01,max_value=0.2,value=0.05,step=0.01)
 p_out=st.sidebar.slider("p_out",min_value=0.001,max_value=0.05,value=0.005,step=0.001)
-d=st.sidebar.number_input("feat dim",value=64,step=16)
-initial=st.sidebar.number_input("initial labels",value=10,step=5)
-batch=st.sidebar.number_input("batch size",value=20,step=5)
-rounds=st.sidebar.number_input("rounds",value=10,step=1)
-layers=st.sidebar.number_input("gcn layers",value=2,step=1)
+d=st.sidebar.number_input("feat dim",min_value=4,value=64,step=16)
+initial=st.sidebar.number_input("initial labels",min_value=1,value=10,step=5)
+batch=st.sidebar.number_input("batch size",min_value=1,value=20,step=5)
+rounds=st.sidebar.number_input("rounds",min_value=1,value=10,step=1)
+layers=st.sidebar.number_input("gcn layers",min_value=1,value=2,step=1)
 lam=st.sidebar.slider("hybrid lambda",min_value=0.0,max_value=1.0,value=0.5,step=0.05)
 
 if st.button("run"):

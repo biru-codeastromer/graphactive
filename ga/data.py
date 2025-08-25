@@ -2,6 +2,10 @@ import numpy as np
 import networkx as nx
 
 def make_sbm(seed=42,n=1500,k=3,p_in=0.05,p_out=0.005,d=64,imbalance=0.1):
+    k=int(k); d=int(d); n=int(n)
+    if k<2: k=2
+    if d<1: d=1
+    if n<k*5: n=k*5
     rng=np.random.RandomState(seed)
     base=n//k
     sizes=[base for _ in range(k)]
@@ -9,19 +13,16 @@ def make_sbm(seed=42,n=1500,k=3,p_in=0.05,p_out=0.005,d=64,imbalance=0.1):
         sizes[i%k]+=1
     shift=int(imbalance*base)
     for i in range(k):
-        if i%2==0:
-            sizes[i]=max(10,sizes[i]+shift)
-        else:
-            sizes[i]=max(10,sizes[i]-shift)
+        sizes[i]=max(5,sizes[i]+(shift if i%2==0 else -shift))
     while sum(sizes)>n:
         for i in range(k):
-            if sizes[i]>10 and sum(sizes)>n:
+            if sizes[i]>5 and sum(sizes)>n:
                 sizes[i]-=1
     while sum(sizes)<n:
         sizes[0]+=1
     B=np.full((k,k),p_out,dtype=float)
     for i in range(k):
-        B[i,i]=p_in
+        B[i,i]=max(p_in,p_out)
     G=nx.stochastic_block_model(sizes,B,seed=seed)
     A=nx.to_numpy_array(G,dtype=float)
     A=A+np.eye(A.shape[0])

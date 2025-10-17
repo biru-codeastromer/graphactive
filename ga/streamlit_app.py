@@ -7,17 +7,25 @@ from ga.active import run_active
 
 st.set_page_config(page_title="GraphActive",page_icon="🧭",layout="centered")
 
-seed=st.sidebar.number_input("seed",value=42,step=1)
-n=st.sidebar.number_input("nodes",min_value=100,value=1500,step=100)
-k=st.sidebar.number_input("communities",min_value=2,value=3,step=1)
-p_in=st.sidebar.slider("p_in",min_value=0.01,max_value=0.2,value=0.05,step=0.01)
-p_out=st.sidebar.slider("p_out",min_value=0.001,max_value=0.05,value=0.005,step=0.001)
-d=st.sidebar.number_input("feat dim",min_value=4,value=64,step=16)
-initial=st.sidebar.number_input("initial labels",min_value=1,value=10,step=5)
-batch=st.sidebar.number_input("batch size",min_value=1,value=20,step=5)
-rounds=st.sidebar.number_input("rounds",min_value=1,value=10,step=1)
-layers=st.sidebar.number_input("gcn layers",min_value=1,value=2,step=1)
-lam=st.sidebar.slider("hybrid lambda",min_value=0.0,max_value=1.0,value=0.5,step=0.05)
+st.title("GraphActive")
+st.markdown("""
+This application demonstrates active learning on a synthetic graph. Active learning is a machine learning technique where the learning algorithm is allowed to choose the data from which it learns. In this simulation, we compare three different strategies for selecting which nodes to label next:
+- **Uncertainty Sampling**: The model queries the labels for the nodes it is least certain about.
+- **Community-Aware Sampling**: The model tries to acquire labels from different communities within the graph to get a more diverse set of training data.
+- **Hybrid**: A combination of both uncertainty and community-aware sampling.
+""")
+
+seed=st.sidebar.number_input("seed",value=42,step=1, help="The random seed for reproducibility.")
+n=st.sidebar.number_input("nodes",min_value=100,value=1500,step=100, help="The total number of nodes in the graph.")
+k=st.sidebar.number_input("communities",min_value=2,value=3,step=1, help="The number of communities in the graph.")
+p_in=st.sidebar.slider("p_in",min_value=0.01,max_value=0.2,value=0.05,step=0.01, help="The probability of an edge between two nodes in the same community.")
+p_out=st.sidebar.slider("p_out",min_value=0.001,max_value=0.05,value=0.005,step=0.001, help="The probability of an edge between two nodes in different communities.")
+d=st.sidebar.number_input("feat dim",min_value=4,value=64,step=16, help="The dimensionality of the node features.")
+initial=st.sidebar.number_input("initial labels",min_value=1,value=10,step=5, help="The number of initially labeled nodes.")
+batch=st.sidebar.number_input("batch size",min_value=1,value=20,step=5, help="The number of nodes to label in each round of active learning.")
+rounds=st.sidebar.number_input("rounds",min_value=1,value=10,step=1, help="The number of active learning rounds.")
+layers=st.sidebar.number_input("gcn layers",min_value=1,value=2,step=1, help="The number of layers in the Graph Convolutional Network (GCN).")
+lam=st.sidebar.slider("hybrid lambda",min_value=0.0,max_value=1.0,value=0.5,step=0.05, help="The weight for the hybrid strategy. A value of 1.0 is pure uncertainty, and 0.0 is pure community-awareness.")
 
 if st.button("run"):
     counts,ent,com,hyb=run_active(seed=int(seed),n=int(n),k=int(k),p_in=float(p_in),p_out=float(p_out),d=int(d),initial=int(initial),batch=int(batch),rounds=int(rounds),layers=int(layers),lam=float(lam))
